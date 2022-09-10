@@ -23,5 +23,3 @@ urlpatterns = [
     path('hello/', base.views.hello),
 ]
 
-if __name__ == '__main__':
-    pass
