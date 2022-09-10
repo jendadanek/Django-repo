@@ -16,6 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+import base.views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('hello/', base.views.hello),
 ]
+
+if __name__ == '__main__':
+    pass
