@@ -17,7 +17,8 @@ from django.contrib import admin
 from django.urls import path
 
 import base.views
-from base.class_views.Rommsview import Roomsview
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,6 +26,7 @@ urlpatterns = [
     path('search/', base.views.search, name = "search"),
     path('room/<id>', base.views.room, name = "room"),
     # path('', base.views.home, name = "home"),
-    path('', Roomsview.as_view(), name = "home")
+    path('', base.views.Roomsview.as_view(), name ="home"),
+    path('room_create', base.views.room_create, name = "room_create")
 ]
 
