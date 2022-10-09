@@ -25,9 +25,9 @@ def search(request):
         return render(request, "base/search.html", context)
 
 def room(request, id):
-    """  Umožnuje jít na konkrétní místnost    """
-    """ vytváření zpráv """
+    """ vytváření zpráv do místnosti """
     room = Room.objects.get(id=id)
+    messages = room.message_set.all()
 
     # POST
     if request.method == 'POST':
@@ -40,7 +40,7 @@ def room(request, id):
         return redirect('room', id=room.id)
 
     # GET
-    context = {'room': room}
+    context = {'room': room, 'messages': messages}
     return render(request, 'base/room.html', context)
 
 
