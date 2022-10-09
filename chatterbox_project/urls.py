@@ -27,6 +27,10 @@ urlpatterns = [
     path('room/<id>', base.views.room, name = "room"),
     # path('', base.views.home, name = "home"),
     path('', base.views.Roomsview.as_view(), name ="home"),
-    path('room_create', base.views.room_create, name = "room_create")
+    # path('room_create', base.views.room_create, name = "room_create"),
+    path('room_create/', base.views.RoomCreateView.as_view(), name='room_create'),
+    path('room_update/<pk>', base.views.RoomUpdateView.as_view(), name='room_update'),
+    path('room_delete/<pk>', base.views.RoomDeleteView.as_view(), name='room_delete'),
+
 ]
 

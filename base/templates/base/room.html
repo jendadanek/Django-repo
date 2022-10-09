@@ -1,6 +1,12 @@
-{% extends "main.html" %}
+{% extends 'main.html' %}
 
 {% block content %}
-<h1> {{ room.name }}</h1>
-<div>{{ room.description }}</div>
+    <h1>{{ room.name }}</h1>
+    <div>{{ room.description }}</div>
+    <div class="box room__message">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <input name="body" placeholder="Write your message here..."/>
+        </form>
+    </div>
 {% endblock %}
