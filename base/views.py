@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -14,6 +16,9 @@ def hello(request):
     s = request.GET.get('s', ' ')
     return HttpResponse(f"Hello {s}")
 
+
+
+@login_required
 def search(request):
     """  Hledání  v url adrese """
     q = request.GET.get('q', ' ')
@@ -23,7 +28,7 @@ def search(request):
         rooms = Room.objects.filter(Q(description__contains = q) | Q(name__contains=q))
         context = {"query": q, "rooms" : rooms}
         return render(request, "base/search.html", context)
-
+@login_required
 def room(request, id):
     """ vytváření zpráv do místnosti """
     room = Room.objects.get(id=id)
@@ -51,13 +56,13 @@ def room(request, id):
 #     return render(request, "base/home.html", context)
 
 
-class RoomDeleteView(DeleteView):
+class RoomDeleteView(LoginRequiredMixin,DeleteView):
     """ umo6nuje smazání místnosti """
     template_name = 'base/room_confirm_delete.html'
     model = Room
     success_url = reverse_lazy('home')
 
-class RoomUpdateView(UpdateView):
+class RoomUpdateView(LoginRequiredMixin,UpdateView):
     """ umo6nuje editaci jména a popisu místnosti """
     template_name = 'base/room_form.html'
     model = Room
@@ -67,7 +72,7 @@ class RoomUpdateView(UpdateView):
     def form_invalid(self, form):
         return super().form_invalid(form)
 
-class RoomCreateView(CreateView):
+class RoomCreateView(LoginRequiredMixin,CreateView):
     """ Zjednodušení  RoomCreateView(FormView) """
     template_name = 'base/room_form.html'
     form_class = RoomForm
@@ -133,7 +138,7 @@ class RoomCreateView(CreateView):
 #     template_name = "base/home.html"
 #     extra_context = {"rooms": rooms}
 
-class Roomsview(ListView):
+class Roomsview(LoginRequiredMixin,ListView):
     """  Zjednodušuje Roomsview(TemplateView) """
     template_name = "base/home.html"
     model = Room

@@ -5,4 +5,8 @@
     <li>
         <a href="{% url 'room_create' %}">CREATE ROOM</a>
     </li>
+    <li class = "last-child">
+        <a href="{% url 'logout' %}">LOGOUT</a>
+         {{request.user.username}}
+    </li>
 </ul><br class="clearfix"/>
