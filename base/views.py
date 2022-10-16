@@ -1,5 +1,5 @@
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -19,6 +19,7 @@ def hello(request):
 
 
 @login_required
+@permission_required(['base.view_room', 'base.view_message'])
 def search(request):
     """  Hledání  v url adrese """
     q = request.GET.get('q', ' ')
@@ -29,6 +30,7 @@ def search(request):
         context = {"query": q, "rooms" : rooms}
         return render(request, "base/search.html", context)
 @login_required
+@permission_required(['base.view_room', 'base.view_message'])
 def room(request, id):
     """ vytváření zpráv do místnosti """
     room = Room.objects.get(id=id)
@@ -56,28 +58,27 @@ def room(request, id):
 #     return render(request, "base/home.html", context)
 
 
-class RoomDeleteView(LoginRequiredMixin,DeleteView):
-    """ umo6nuje smazání místnosti """
+class RoomDeleteView(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
     template_name = 'base/room_confirm_delete.html'
     model = Room
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('rooms')
+    permission_required = 'base.delete_room'
 
-class RoomUpdateView(LoginRequiredMixin,UpdateView):
-    """ umo6nuje editaci jména a popisu místnosti """
+class RoomUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     template_name = 'base/room_form.html'
     model = Room
     form_class = RoomForm
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('rooms')
+    permission_required = 'base.change_room'
 
     def form_invalid(self, form):
         return super().form_invalid(form)
 
-class RoomCreateView(LoginRequiredMixin,CreateView):
-    """ Zjednodušení  RoomCreateView(FormView) """
+class RoomCreateView(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
     template_name = 'base/room_form.html'
     form_class = RoomForm
-    success_url = reverse_lazy('home')
-
+    success_url = reverse_lazy('rooms')
+    permission_required = 'base.add_room'
     def form_invalid(self, form):
         return super().form_invalid(form)
 
@@ -138,10 +139,12 @@ class RoomCreateView(LoginRequiredMixin,CreateView):
 #     template_name = "base/home.html"
 #     extra_context = {"rooms": rooms}
 
-class Roomsview(LoginRequiredMixin,ListView):
+class Roomsview(PermissionRequiredMixin,LoginRequiredMixin,ListView):
     """  Zjednodušuje Roomsview(TemplateView) """
     template_name = "base/home.html"
     model = Room
+    permission_required = 'base.view_room'
+
 
 
 
